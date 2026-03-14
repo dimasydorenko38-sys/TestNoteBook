@@ -1,0 +1,49 @@
+@note_id = 69b5843f6101d08ae612152a
+
+### add note
+POST http://localhost:8080/note/add
+Content-Type: application/json
+
+{
+  "title": "firstNote",
+  "text": "hello",
+  "tags": ["BUSINESS"]
+}
+
+### getFirstId
+GET http://localhost:8080/note/getFirstId
+Content-Type: application/json
+
+// update note_id to result id;
+
+### update add
+PUT http://localhost:8080/note/{{note_id}}
+Content-Type: application/json
+
+{
+  "title": "first Note",
+  "text": "This is a test note for VigVam.space. Let's check the logic! The word count must be exactly forty-five. It's a vital point. For instance, does 'this-this' count as one or two? And 'it's' is definitely one, right? Adding more text: one, two, three, four, five, six, seven, eight, nine, ten. Done.",
+  "tags": ["IMPORTANT"]
+}
+
+### get titles note
+POST http://localhost:8080/note/search?page=0
+Content-Type: application/json
+
+{
+  "tags": ["BUSINESS", "IMPORTANT"]
+}
+
+### get note Card
+GET http://localhost:8080/note/get/{{note_id}}
+Content-Type: application/json
+
+### get statistic
+GET http://localhost:8080/note/statistic/{{note_id}}
+Content-Type: application/json
+
+
+### delete note
+DELETE http://localhost:8080/note/delete/{{note_id}}
+Content-Type: application/json
+

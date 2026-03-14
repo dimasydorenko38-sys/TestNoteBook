@@ -1,6 +1,6 @@
 package com.QoQTestProject.notes.service;
 
-import com.QoQTestProject.notes.dto.request.CrateNoteDto;
+import com.QoQTestProject.notes.dto.request.CreateNoteDto;
 import com.QoQTestProject.notes.dto.request.FilterTagsForNotes;
 import com.QoQTestProject.notes.dto.response.GetOnlyTitleNotesResponseDto;
 import com.QoQTestProject.notes.dto.response.NoteCardResponseDto;
@@ -33,7 +33,7 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
 
-    public void createNote(@NonNull CrateNoteDto dto) {
+    public void createNote(@NonNull CreateNoteDto dto) {
         if(dto.text().isEmpty() || dto.title().isEmpty()) throw new NullPointerException("Text or Title is empty");
         NoteEntity note = NoteEntity.builder()
                 .title(dto.title())
@@ -51,7 +51,7 @@ public class NoteService {
         return noteEntityList.getFirst().getId();
     }
 
-    public void updateNote(@NonNull String id, @NonNull CrateNoteDto dto) {
+    public void updateNote(@NonNull String id, @NonNull CreateNoteDto dto) {
         if(dto.text().isEmpty() || dto.title().isEmpty()) throw new NullPointerException("Text or Title is empty");
         NoteEntity note = noteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Note", id));
         note.setTitle(dto.title());

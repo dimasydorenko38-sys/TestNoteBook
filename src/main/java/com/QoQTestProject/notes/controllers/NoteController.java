@@ -1,6 +1,6 @@
 package com.QoQTestProject.notes.controllers;
 
-import com.QoQTestProject.notes.dto.request.CrateNoteDto;
+import com.QoQTestProject.notes.dto.request.CreateNoteDto;
 import com.QoQTestProject.notes.dto.request.FilterTagsForNotes;
 import com.QoQTestProject.notes.dto.response.GetOnlyTitleNotesResponseDto;
 import com.QoQTestProject.notes.dto.response.NoteCardResponseDto;
@@ -26,15 +26,15 @@ public class NoteController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> createNote(@Valid @RequestBody CrateNoteDto dto) {
+    public ResponseEntity<String> createNote(@Valid @RequestBody CreateNoteDto dto) {
         noteService.createNote(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Note created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateNote(@Valid @PathVariable String id, @RequestBody CrateNoteDto dto) {
+    public ResponseEntity<String> updateNote(@Valid @PathVariable String id, @RequestBody CreateNoteDto dto) {
         noteService.updateNote(id, dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Note '" + dto.title() + "' updated");
+        return ResponseEntity.status(HttpStatus.OK).body("Note '" + dto.title() + "' updated");
     }
 
     @DeleteMapping("/delete/{id}")

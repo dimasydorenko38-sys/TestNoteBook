@@ -1,6 +1,6 @@
 package com.QoQTestProject.notes.dto.response;
 
-import com.QoQTestProject.notes.properties.entity.NoteEntity;
+import com.QoQTestProject.notes.persistence.entity.NoteEntity;
 
 import java.time.LocalDateTime;
 

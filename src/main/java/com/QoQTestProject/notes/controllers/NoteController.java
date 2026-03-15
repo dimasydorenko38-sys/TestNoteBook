@@ -25,25 +25,25 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.getFirstNoteId());
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<String> createNote(@Valid @RequestBody CreateNoteDto dto) {
         noteService.createNote(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Note created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateNote(@Valid @PathVariable String id, @RequestBody CreateNoteDto dto) {
+    public ResponseEntity<String> updateNote(@PathVariable String id,@Valid @RequestBody CreateNoteDto dto) {
         noteService.updateNote(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body("Note '" + dto.title() + "' updated");
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteNote(@PathVariable String id) {
         noteService.deleteNote(id);
         return ResponseEntity.status(HttpStatus.OK).body("Note deleted");
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<Page<GetOnlyTitleNotesResponseDto>> getOnlyTitleNotes(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
@@ -51,7 +51,7 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.getOnlyTitleNotes(page, size, dto));
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<NoteCardResponseDto> getNoteCard(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.getNoteCard(id));
     }

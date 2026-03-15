@@ -6,9 +6,9 @@ import com.QoQTestProject.notes.dto.response.GetOnlyTitleNotesResponseDto;
 import com.QoQTestProject.notes.dto.response.NoteCardResponseDto;
 import com.QoQTestProject.notes.dto.response.NoteStatisticResponseDto;
 import com.QoQTestProject.notes.exeptions.EntityNotFoundException;
-import com.QoQTestProject.notes.properties.entity.NoteEntity;
-import com.QoQTestProject.notes.properties.enums.Tags;
-import com.QoQTestProject.notes.properties.repository.NoteRepository;
+import com.QoQTestProject.notes.persistence.entity.NoteEntity;
+import com.QoQTestProject.notes.persistence.enums.Tags;
+import com.QoQTestProject.notes.persistence.repository.NoteRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,21 +28,22 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(rollbackFor = Exception.class)
 public class NoteService {
 
     private final NoteRepository noteRepository;
 
+    @Transactional(rollbackFor = Exception.class)
     public void createNote(@NonNull CreateNoteDto dto) {
         if(dto.text().isEmpty() || dto.title().isEmpty()) throw new NullPointerException("Text or Title is empty");
         NoteEntity note = NoteEntity.builder()
                 .title(dto.title())
                 .text(dto.text())
-                .tags(dto.tags().stream().map(Tags::fromString).collect(Collectors.toSet()))
+                .tags(dto.tags())
                 .build();
         noteRepository.save(note);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public String getFirstNoteId() {
         List<NoteEntity> noteEntityList = noteRepository.findAll();
         if (noteEntityList.isEmpty()) {
@@ -51,15 +52,17 @@ public class NoteService {
         return noteEntityList.getFirst().getId();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void updateNote(@NonNull String id, @NonNull CreateNoteDto dto) {
         if(dto.text().isEmpty() || dto.title().isEmpty()) throw new NullPointerException("Text or Title is empty");
         NoteEntity note = noteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Note", id));
         note.setTitle(dto.title());
         note.setText(dto.text());
-        note.setTags(dto.tags().stream().map(Tags::fromString).collect(Collectors.toSet()));
+        note.setTags(dto.tags());
         noteRepository.save(note);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteNote(@NonNull String id) {
         NoteEntity note = noteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Note", id));
         noteRepository.delete(note);
@@ -86,13 +89,15 @@ public class NoteService {
     public Page<GetOnlyTitleNotesResponseDto> getOnlyTitleNotes(int page, int size, FilterTagsForNotes dto) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<NoteEntity> noteEntityPage;
-        Set<Tags> tags;
-        if (dto.tags().isEmpty()) {
+        Set<Tags> tags = dto.tags();
+        if (tags.isEmpty()) {
             noteEntityPage = noteRepository.findAll(pageable);
         } else {
-            tags = dto.tags().stream().map(Tags::fromString).collect(Collectors.toSet());
             noteEntityPage = noteRepository.findByTagsIn(tags, pageable);
         }
         return noteEntityPage.map(GetOnlyTitleNotesResponseDto::new);
     }
+
+
+
 }

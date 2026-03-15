@@ -1,6 +1,6 @@
-package com.QoQTestProject.notes.properties.entity;
+package com.QoQTestProject.notes.persistence.entity;
 
-import com.QoQTestProject.notes.properties.enums.Tags;
+import com.QoQTestProject.notes.persistence.enums.Tags;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;

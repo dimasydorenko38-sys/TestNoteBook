@@ -1,11 +1,11 @@
-@note_id = 69b5843f6101d08ae612152a
+@note_id = 69b6a7a6416ccbb831b64e6e
 
 ### add note
-POST http://localhost:8080/note/add
+POST http://localhost:8080/note
 Content-Type: application/json
 
 {
-  "title": "firstNote",
+  "title": "firstNote22",
   "text": "hello",
   "tags": ["BUSINESS"]
 }
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ### get titles note
-POST http://localhost:8080/note/search?page=0
+GET http://localhost:8080/note/search?page=0
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ### get note Card
-GET http://localhost:8080/note/get/{{note_id}}
+GET http://localhost:8080/note/{{note_id}}
 Content-Type: application/json
 
 ### get statistic
@@ -44,6 +44,6 @@ Content-Type: application/json
 
 
 ### delete note
-DELETE http://localhost:8080/note/delete/{{note_id}}
+DELETE http://localhost:8080/note/{{note_id}}
 Content-Type: application/json
 

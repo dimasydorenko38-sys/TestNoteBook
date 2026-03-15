@@ -1,7 +1,7 @@
-package com.QoQTestProject.notes.properties.repository;
+package com.QoQTestProject.notes.persistence.repository;
 
-import com.QoQTestProject.notes.properties.entity.NoteEntity;
-import com.QoQTestProject.notes.properties.enums.Tags;
+import com.QoQTestProject.notes.persistence.entity.NoteEntity;
+import com.QoQTestProject.notes.persistence.enums.Tags;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

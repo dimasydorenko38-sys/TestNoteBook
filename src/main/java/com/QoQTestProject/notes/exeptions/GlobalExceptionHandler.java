@@ -6,9 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tools.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -72,4 +75,28 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleJsonErrors(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        log.warn("JSON parsing error at path {}: {}", request.getRequestURI(), ex.getMostSpecificCause().getMessage());
+        String message = extractReadableMessage(ex);
+        return buildResponse(HttpStatus.BAD_REQUEST, message, request);
+    }
+
+    private String extractReadableMessage(HttpMessageNotReadableException ex) {
+        Throwable cause = ex.getCause();
+        String defaultMessage = "Invalid JSON format";
+        if (cause instanceof MismatchedInputException mismatchedExp) {
+            Class<?> targetType = mismatchedExp.getTargetType();
+            if (targetType != null && targetType.isEnum()) {
+                String enumValues = java.util.Arrays.toString(targetType.getEnumConstants());
+                String providedValue = "[unknown]";
+                if (mismatchedExp instanceof InvalidFormatException invalidExp) {
+                    providedValue = invalidExp.getValue().toString();
+                }
+                return String.format("Invalid value '%s'. Accepted values are: %s",
+                        providedValue, enumValues);
+            }
+        }
+        return defaultMessage;
+    }
 }
